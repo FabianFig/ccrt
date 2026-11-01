@@ -1,13 +1,12 @@
 # Release procedure
 
-The source currently identifies itself as `0.1.0rc1`. The intended first public
-release, `0.1.0`, is an experimental research library. It promises installable
+Version `0.1.0` is an experimental research library. It promises installable
 UCDP GED and ACLED event import, source-preserving dataset bundles, inspectable
 candidate generation, human review, and exports as documented in the README and
 API guide. It does not promise that candidate links are correct, that scores are
 probabilities, or that source casualty claims can be combined. Building a wheel
-does not validate a matching method. Publication is a separate maintainer action;
-CI does not upload to package indexes.
+does not validate a matching method. Publication requires a maintainer-approved
+GitHub release and approval of the protected `pypi` environment.
 
 ## Gates for an experimental public 0.1.0
 
@@ -31,8 +30,8 @@ CI does not upload to package indexes.
   [PyPI's naming guidance](https://docs.pypi.org/project-management/choosing-a-name/)
   explains why an unseen name may still be unavailable. Change `pyproject.toml`
   if the name cannot be claimed; the import package can remain `ccrt`.
-- Set `ccrt/_version.py` to `0.1.0`, update the changelog and release wording,
-  then rebuild and repeat package checks on that exact release commit.
+- Confirm that `ccrt/_version.py`, the changelog, release wording, and distribution
+  metadata all identify `0.1.0`. Repeat package checks on the exact release commit.
 
 The earlier live UCDP query and ACLED CSV import in `docs/validation.md` are useful
 mapping checks, not proof of linkage accuracy. Rechecking live data is appropriate
@@ -79,15 +78,13 @@ out of Git; upload the intended wheel/source archive only when publishing.
    protected `main` branch. Keep private source data and research drafts out of it.
 2. Confirm the `ccrt` PyPI name and publishing access. A missing public project
    page does not establish that the name can be registered.
-3. Set the version to `0.1.0`, update the changelog and preview wording, and merge
-   the release changes only after CI passes. Inspect the wheel and source archive
-   produced from the release commit.
-4. With maintainer approval, tag the release and publish those verified artefacts.
-   GitHub Actions Trusted Publishing is recommended if the maintainer wants CI
-   publication: configure a dedicated publishing workflow and matching PyPI
-   publisher, with a protected GitHub environment. Keep the existing test and
-   package CI jobs rather than duplicating them in the publish workflow. A manual
-   upload with maintainer-controlled credentials is also possible.
+3. Merge the version change only after CI passes. Inspect the wheel and source
+   archive produced from the resulting `main` commit.
+4. Configure the matching PyPI Trusted Publisher for `FabianFig/ccrt`, workflow
+   `publish.yml`, and environment `pypi`. With maintainer approval, tag the tested
+   commit as `v0.1.0` and publish its GitHub release. The release workflow checks
+   the tag, the successful `main` CI run, and both distributions before awaiting
+   approval in the protected `pypi` environment and uploading to PyPI.
 5. Install the published `ccrt==0.1.0` wheel in a fresh environment outside the
    checkout and repeat the installed-package smoke test. Confirm the public
    project page, metadata, and artifact hashes.

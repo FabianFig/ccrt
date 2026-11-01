@@ -4,19 +4,19 @@ CCRT compares source accounts of conflict incidents. It imports UCDP GED and ACL
 records, proposes possible links, supports human review, and exports results while
 preserving each source's original claims.
 
-**Status:** `0.1.0rc1` is an unpublished package preview. The planned `0.1.0`
-release is an experimental research library.
+**Status:** `0.1.0` is an experimental research library.
 
 ## Installation
 
-CCRT supports Python 3.10–3.14. From a checkout of this repository:
+CCRT supports Python 3.10–3.14. To install a published release:
 
 ```bash
-python -m pip install -e .
+python -m pip install ccrt
 ```
 
-Install `.[tables]` for pandas and Parquet support, or `.[tables,dev]` for the
-project's development checks. CCRT has not yet been published to PyPI.
+Install `ccrt[tables]` for pandas and Parquet support. From a checkout, use
+`python -m pip install -e .`, or `python -m pip install -e '.[tables,dev]'` for the
+project's development checks.
 
 ## Quickstart
 

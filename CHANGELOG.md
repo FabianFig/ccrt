@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0rc1 - unreleased
+## 0.1.0
 
 - Added source-preserving UCDP GED CSV/API and ACLED event CSV adapters, validation
   reports, explicit snapshot versions, and input fingerprints.
@@ -33,12 +33,12 @@ Use `total_deaths_low/best/high` and `civilian_deaths` explicitly. The CLI now u
 `import`, `fetch-ucdp`, `match`, `review`, and `export` subcommands. These changes
 precede the first public release; no backward-compatibility shim is provided.
 
-### Experimental release preparation
+### Validation scope
 
-Public `0.1.0` is planned as an experimental library. Independent real-data linkage
+`0.1.0` is an experimental library. Independent real-data linkage
 evaluation is not a publication gate for the library, but remains necessary before
 claiming empirical matching accuracy. A prior UCDP GED 26.1 Iraq 2020 query
 retrieved 282 records with 10 validation warnings; a real ACLED export supplied
 6,306 filtered Iraq 2020 records with no import issues. Candidate generation
 produced 1,329 pairs. Partial manual reviews do not establish precision or recall.
-The package has not been published. See `docs/releasing.md` for the current gates.
+See `docs/releasing.md` for the publication procedure.

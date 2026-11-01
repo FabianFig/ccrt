@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ccrt"
+dynamic = ["version"]
+description = "Experimental toolkit for reviewing candidate links between conflict incident records"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "Fabian Figueroa"}]
+dependencies = ["httpx>=0.27,<1", "python-dotenv>=1,<2"]
+keywords = ["conflict", "record-linkage", "ucdp", "acled", "research"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Operating System :: OS Independent",
+]
+
+[project.optional-dependencies]
+tables = ["pandas>=2.2", "pyarrow>=15"]
+dev = ["pytest>=8", "ruff>=0.9", "build>=1.2", "twine>=6", "nbformat>=5.10", "nbclient>=0.10", "ipykernel>=6"]
+
+[project.urls]
+Repository = "https://github.com/FabianFig/ccrt"
+Issues = "https://github.com/FabianFig/ccrt/issues"
+
+[project.scripts]
+ccrt = "ccrt.cli:main"
+
+[tool.setuptools.dynamic]
+version = {attr = "ccrt._version.__version__"}
+
+[tool.setuptools.packages.find]
+include = ["ccrt*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]

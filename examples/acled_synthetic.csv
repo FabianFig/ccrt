@@ -1,0 +1,6 @@
+event_id_cnty,event_date,time_precision,latitude,longitude,geo_precision,country,actor1,actor2,event_type,sub_event_type,fatalities,notes
+A1,2020-01-04,1,0.101,0.102,1,Exampleland,Group A,Group B,Explosions/Remote violence,Air/drone strike,3,Synthetic counterpart of U1
+A2,2020-01-03,1,0.105,0.105,1,Exampleland,Group D,Group E,Battles,Armed clash,2,Synthetic nearby distinct incident
+A3,2020-01-10,2,0.501,0.501,2,Exampleland,Group A,Group C,Battles,Armed clash,0,Synthetic counterpart of U2 with uncertain date
+A4,2020-02-15,3,0.901,0.901,3,Exampleland,Group B,Civilians,Violence against civilians,Attack,3,Synthetic counterpart of U3 with coarse location
+A5,2020-04-01,1,0.1,0.1,1,Exampleland,Group A,Group B,Battles,Armed clash,,Synthetic unrelated later incident

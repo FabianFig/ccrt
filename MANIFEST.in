@@ -1,0 +1,5 @@
+include LICENSE CHANGELOG.md CONTRIBUTING.md
+include docs/api.md docs/releasing.md docs/source-mappings.md docs/validation.md
+recursive-include examples *.csv *.ipynb
+recursive-include tests *.py
+recursive-include benchmarks *.py

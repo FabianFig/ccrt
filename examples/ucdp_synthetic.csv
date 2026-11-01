@@ -1,0 +1,5 @@
+id,date_start,date_end,date_prec,latitude,longitude,where_prec,country,side_a,side_b,type_of_violence,low,best,high,deaths_civilians,source_article,event_clarity
+U1,2020-01-03,2020-01-03,1,0.1,0.1,1,Exampleland,Group A,Group B,1,2,4,6,1,Synthetic account A,1
+U2,2020-01-10,2020-01-10,1,0.5,0.5,1,Exampleland,Group A,Group C,1,1,2,3,0,Synthetic account B,1
+U3,2020-02-01,2020-02-29,4,0.9,0.9,3,Exampleland,Group B,Civilians,3,1,3,5,3,Synthetic regional account,2
+U4,2020-01-03,2020-01-03,1,,,1,Exampleland,Group A,Group B,1,1,1,2,0,Synthetic missing location,1

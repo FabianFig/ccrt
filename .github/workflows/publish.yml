@@ -1,0 +1,98 @@
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: ${{ !github.event.release.prerelease }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Verify release tag and tested commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          version=$(sed -n 's/^__version__ = "\(.*\)"/\1/p' ccrt/_version.py)
+          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          test "$RELEASE_TAG" = "v$version"
+          git fetch --no-tags origin main
+          git merge-base --is-ancestor "$GITHUB_SHA" FETCH_HEAD
+          runs=$(gh api -X GET "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs" \
+            -f head_sha="$GITHUB_SHA" -f branch=main -f event=push -f status=success)
+          jq -e --arg sha "$GITHUB_SHA" \
+            '.workflow_runs | map(select(.head_sha == $sha and .conclusion == "success")) | length > 0' \
+            <<< "$runs"
+      - run: python -m pip install build twine
+      - run: python -m build
+      - run: python -m twine check dist/*
+      - name: Verify distribution versions
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from email import policy
+          from email.parser import BytesParser
+          from pathlib import Path
+          from tarfile import open as open_tar
+          from zipfile import ZipFile
+          import os
+
+          version = os.environ['RELEASE_TAG'].removeprefix('v')
+          files = sorted(Path('dist').iterdir())
+          wheels = [p for p in files if p.name.startswith(f'ccrt-{version}-') and p.suffix == '.whl']
+          sdist = Path('dist') / f'ccrt-{version}.tar.gz'
+          if len(files) != 2 or len(wheels) != 1 or sdist not in files:
+              raise SystemExit(f'Unexpected distributions: {[p.name for p in files]}')
+
+          with ZipFile(wheels[0]) as archive:
+              names = [n for n in archive.namelist() if n.endswith('.dist-info/METADATA')]
+              if len(names) != 1:
+                  raise SystemExit('Wheel must contain one METADATA file')
+              wheel_metadata = archive.read(names[0])
+          with open_tar(sdist, 'r:gz') as archive:
+              member = archive.extractfile(f'ccrt-{version}/PKG-INFO')
+              if member is None:
+                  raise SystemExit('Source archive is missing PKG-INFO')
+              sdist_metadata = member.read()
+          for label, raw in [('wheel', wheel_metadata), ('source archive', sdist_metadata)]:
+              metadata = BytesParser(policy=policy.default).parsebytes(raw)
+              if metadata['Name'] != 'ccrt' or metadata['Version'] != version:
+                  raise SystemExit(f'{label} has unexpected name or version')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: python-distributions
+          path: dist/*
+          if-no-files-found: error
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: python-distributions
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3

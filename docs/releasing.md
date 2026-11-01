@@ -22,10 +22,10 @@ CI does not upload to package indexes.
   records, credentials, and local research annotations.
 - Check the current terms and attribution requirements for the source datasets.
   The [UCDP download center](https://ucdp.uu.se/downloads/) describes its dataset
-  license and required citations. ACLED's [EULA](https://acleddata.com/eula),
+  licence and required citations. ACLED's [EULA](https://acleddata.com/eula),
   [content usage terms](https://acleddata.com/contentusage), and
   [attribution policy](https://acleddata.com/attributionpolicy) govern use of its
-  data. Do not bundle ACLED source records or assume the code license covers data.
+  data. Do not bundle ACLED source records or assume the code licence covers data.
 - Verify the intended PyPI distribution name and maintainer ownership immediately
   before upload. A 404 from a public project lookup does not reserve the name.
   [PyPI's naming guidance](https://docs.pypi.org/project-management/choosing-a-name/)
@@ -48,7 +48,7 @@ adjudicated reference labels, and an analysis of missed and false links, thresho
 and excluded records. Draft correspondence and annotation protocols remain internal
 while their research-lead decisions are pending. Operational accepted-link accuracy
 needs a separate decision set and is outside the initial release evaluation. The
-synthetic results in `docs/validation.md` demonstrate software behavior, not
+synthetic results in `docs/validation.md` demonstrate software behaviour, not
 real-data accuracy.
 
 ## Build, inspect, and distribute
@@ -75,18 +75,14 @@ out of Git; upload the intended wheel/source archive only when publishing.
 
 ## Final publication sequence
 
-1. Review the public working-tree changes, then make a clean consolidation commit
-   in the original private repository. Keep unapproved research drafts and local
-   source data out of it. Export only tracked files to a separate public repository
-   with independent Git history. Keep the original repository private.
-2. With maintainer approval, create the public GitHub repository and push the
-   reviewed snapshot. Check its full remote CI matrix. Confirm the `ccrt` PyPI name
-   and publishing access; a missing public project page does not establish that
-   the name can be registered.
-3. In the public repository, set the version to `0.1.0`, update the changelog and
-   preview wording, and make the release commit. Re-run CI and inspect the wheel
-   and source archive produced from that exact commit.
-4. With maintainer approval, tag the release and publish those verified artifacts.
+1. Review release changes in a pull request against the public repository's
+   protected `main` branch. Keep private source data and research drafts out of it.
+2. Confirm the `ccrt` PyPI name and publishing access. A missing public project
+   page does not establish that the name can be registered.
+3. Set the version to `0.1.0`, update the changelog and preview wording, and merge
+   the release changes only after CI passes. Inspect the wheel and source archive
+   produced from the release commit.
+4. With maintainer approval, tag the release and publish those verified artefacts.
    GitHub Actions Trusted Publishing is recommended if the maintainer wants CI
    publication: configure a dedicated publishing workflow and matching PyPI
    publisher, with a protected GitHub environment. Keep the existing test and

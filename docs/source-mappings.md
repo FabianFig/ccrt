@@ -54,6 +54,23 @@ By default, codes >=3 in either supported source prevent matching because those
 representations may be too broad for point-distance comparisons. Users can opt in
 and inspect uncertainty warnings. This choice can miss true matches.
 
+## Candidate selection and ranking
+
+`interval-haversine-v1` retains every eligible cross-source pair within the
+configured date and distance limits. Date distance is the gap between closed
+intervals, or zero when they overlap. Geographic distance is the great-circle
+distance between reported coordinates, not an event boundary. When both country
+labels are present, they must agree after trimming and case folding. Explicit
+country aliases can bridge naming differences; CCRT does not infer actor or
+country equivalence.
+
+The default limits are three days and 25 km. Eligible pairs receive the score
+`1 - (days_apart / (max_days + 1) + distance_km / max_km) / 2` and are ordered by
+that score. Actor names and casualty claims do not affect it. It is an uncalibrated
+proximity ranking, not a match probability. Broad date intervals can yield many
+high-scoring candidates, and the default exclusions can miss true links. See the
+[usage guide](usage.md#generate-candidates) for CLI settings.
+
 ## Validation and provenance
 
 Strict loading raises `ValidationError` with all invalid-row reports. With
@@ -76,9 +93,9 @@ References to Airwars or any other publisher remain provenance, not credibility 
 - [ACLED codebook](https://acleddata.com/methodology/acled-codebook): event columns, date/location precision, and fatality coding.
 
 Mapping notes checked 2026-09-24. Users should cite the datasets and codebooks
-appropriate to their actual exports; the software license does not license data.
+appropriate to their actual exports; the software licence does not license data.
 The [UCDP download center](https://ucdp.uu.se/downloads/) states its current dataset
-license and citation requirements. ACLED's current
+licence and citation requirements. ACLED's current
 [EULA](https://acleddata.com/eula), [content usage terms](https://acleddata.com/contentusage),
 and [attribution policy](https://acleddata.com/attributionpolicy) apply to users of
 its data. In particular, CCRT distributions must not include ACLED source records.

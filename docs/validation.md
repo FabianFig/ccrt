@@ -4,12 +4,15 @@
 
 The offline suite covers source mappings, malformed rows, duplicate IDs, missing
 values, precision handling, retry/auth/paging failures, stale reviews, saved bundle
-integrity, CLI behavior, and JSON/Parquet round trips. A randomized small comparison
+integrity, CLI behaviour, and JSON/Parquet round trips. A randomised small comparison
 checks the temporal index against an exhaustive pair search. Tests require no API key.
 
 The notebook is executed separately as an end-to-end teaching example. CI targets
 Python 3.10–3.14, with Windows and macOS coverage on 3.14. Local verification was
-performed on Linux/Python 3.14; remote CI outcomes are not claimed here.
+performed on Linux/Python 3.14. The first public GitHub Actions run at commit
+`26521413a808f175006530fa95985ca6203c70cf` passed all eight configured jobs,
+including notebook execution on Linux/Python 3.14. Later commits need their own CI
+results.
 
 ### Installed distribution check
 
@@ -24,7 +27,7 @@ After installing the `tables` extra, the same workflow plus a Parquet round trip
 and pandas conversion passed, using pandas 3.0.6 and PyArrow 25.0.1. `pip check`
 found no broken requirements in either mode. The offline suite had 75 passing
 tests, and lint/format checks passed. The package CI job now repeats this installed
-workflow in core and tables modes; remote results remain to be checked after push.
+workflow in core and tables modes.
 
 Archive inspection confirmed the dashboard and report modules were included,
 and excluded `.env`, `.venv`, and `work` paths. A limited scan of the two existing
@@ -83,7 +86,7 @@ The query used `pagesize=1000` and its canonical result SHA-256 was
 The live endpoint used page 0 as its first page, despite documentation examples
 using page 1.
 
-A locally supplied ACLED export labeled `export-2026-09-24` contained 48,255 events
+A locally supplied ACLED export labelled `export-2026-09-24` contained 48,255 events
 from several countries. Filtering by country Iraq and the original reported year
 2020 retained 6,306 records, with no import issues. The original file SHA-256 was
 `9e1edcba2081f9c42c6dcd0ec652dea4e2245457a1bb591b7229fd8a63aeac2a`;
@@ -94,7 +97,7 @@ The default 3-day/25-km run produced 1,329 candidate pairs involving 170 UCDP an
 874 ACLED records. Coarse-location exclusions affected 105 UCDP and 285 ACLED
 records. Those are software observations, not estimates of matching quality.
 Partial manual decisions are local working annotations, not exhaustive reference labels.
-`ccrt report` can summarize them without calculating precision or recall.
+`ccrt report` can summarise them without calculating precision or recall.
 
 These checks support the input mappings, but they do not measure real-data matching
 quality. The first public `0.1.0` may be released as an experimental library with
@@ -107,7 +110,7 @@ this limitation stated plainly. Before making empirical linkage-performance clai
    all true source-ID pairs within that bounded sample, including links the matcher misses.
 4. Run the evaluation script only when labels are exhaustive for those inputs.
 5. Report false positives, false negatives, exclusions, threshold sensitivity, and
-   sample-selection limitations; retain the labeled evidence for reproducibility.
+   sample-selection limitations; retain the labelled evidence for reproducibility.
 
 Partially reviewed candidates alone cannot measure recall: missed true pairs would
 never enter the evaluation. Nor do differences in source totals, by themselves,

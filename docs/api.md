@@ -1,6 +1,6 @@
-# Public API (0.1 preview)
+# Public API (0.1.0)
 
-The planned public `0.1.0` is an experimental library release. The API returns
+`0.1.0` is an experimental library release. The API returns
 source accounts, candidate links, and review decisions. It does not establish
 incident identity or provide measured real-data matching accuracy. Candidate scores
 are uncalibrated proximity rankings.

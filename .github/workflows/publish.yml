@@ -48,11 +48,36 @@ jobs:
           RELEASE_TAG: ${{ github.event.release.tag_name }}
         run: |
           set -euo pipefail
-          version=${RELEASE_TAG#v}
-          test -f "dist/ccrt-${version}.tar.gz"
-          wheels=(dist/ccrt-${version}-*.whl)
-          test "${#wheels[@]}" -eq 1
-          test "$(find dist -maxdepth 1 -type f | wc -l)" -eq 2
+          python - <<'PY'
+          from email import policy
+          from email.parser import BytesParser
+          from pathlib import Path
+          from tarfile import open as open_tar
+          from zipfile import ZipFile
+          import os
+
+          version = os.environ['RELEASE_TAG'].removeprefix('v')
+          files = sorted(Path('dist').iterdir())
+          wheels = [p for p in files if p.name.startswith(f'ccrt-{version}-') and p.suffix == '.whl']
+          sdist = Path('dist') / f'ccrt-{version}.tar.gz'
+          if len(files) != 2 or len(wheels) != 1 or sdist not in files:
+              raise SystemExit(f'Unexpected distributions: {[p.name for p in files]}')
+
+          with ZipFile(wheels[0]) as archive:
+              names = [n for n in archive.namelist() if n.endswith('.dist-info/METADATA')]
+              if len(names) != 1:
+                  raise SystemExit('Wheel must contain one METADATA file')
+              wheel_metadata = archive.read(names[0])
+          with open_tar(sdist, 'r:gz') as archive:
+              member = archive.extractfile(f'ccrt-{version}/PKG-INFO')
+              if member is None:
+                  raise SystemExit('Source archive is missing PKG-INFO')
+              sdist_metadata = member.read()
+          for label, raw in [('wheel', wheel_metadata), ('source archive', sdist_metadata)]:
+              metadata = BytesParser(policy=policy.default).parsebytes(raw)
+              if metadata['Name'] != 'ccrt' or metadata['Version'] != version:
+                  raise SystemExit(f'{label} has unexpected name or version')
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: python-distributions
@@ -70,4 +95,4 @@ jobs:
         with:
           name: python-distributions
           path: dist/
-      - uses: pypa/gh-action-pypi-publish@release/v1
+      - uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3

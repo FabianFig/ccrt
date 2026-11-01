@@ -8,6 +8,7 @@ are uncalibrated proximity rankings.
 Names exported from `ccrt` are the supported entry points. Modules prefixed with
 an underscore and individual loader mapping helpers are implementation details.
 Before 1.0, interface changes will be documented in the changelog.
+For the CLI workflow, see the [usage guide](usage.md).
 
 ## Import and inspect
 
@@ -33,7 +34,7 @@ with UCDPClient() as client:  # UCDP_API_KEY; api_key= also supported
 
 All loaders return `Dataset`. It contains immutable record/issue tuples, source,
 version, origin, input SHA-256, metadata JSON, and a content fingerprint. Iteration
-and `len(dataset)` operate on valid records. `to_pandas()` returns normalized
+and `len(dataset)` operate on valid records. `to_pandas()` returns normalised
 columns with nullable types; dates are ISO strings and raw accounts are JSON strings.
 
 `SourceRecord` stores a source account, with optional dates/coordinates and separate
@@ -51,7 +52,7 @@ The live GED endpoint returned zero-indexed pages in a checked query on
 The `fetch-ucdp` CLI command also reads `UCDP_API_KEY` from `.env` in its current
 directory when the variable is absent; `--env-file PATH` selects another file.
 Only that key is read, and process environment variables take precedence.
-`ValidationError` exposes `.issues`; `UCDPError` reports sanitized transport/API errors.
+`ValidationError` exposes `.issues`; `UCDPError` reports sanitised transport/API errors.
 
 ## Generate and review
 
@@ -127,7 +128,7 @@ JSON bundles are the canonical interchange format and contain schema/library
 versions, provenance, validation issues, and integrity fingerprints. Run loading
 recomputes candidates and verifies their IDs. Parquet carries dataset metadata in
 the file schema and supports `read_parquet` round trips, including empty datasets.
-Plain normalized CSV is a convenience table; retain its JSON bundle for full
+Plain normalised CSV is a convenience table; retain its JSON bundle for full
 provenance and validation reports. Review CSV includes the run ID; retain the run
 bundle to reconstruct original inputs and matching settings.
 
